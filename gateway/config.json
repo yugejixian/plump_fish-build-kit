@@ -1,0 +1,84 @@
+{
+  "$comment": "DSH local GGUF gateway. The gateway is tiny and always available; llama-server starts on the first real inference request and exits after idleTimeoutMs so its VRAM is released. Edit and save: the gateway reloads this file on the next request or spawn, no restart needed. Use `gateway-control.cmd vlm precise|fast` to swap the weights instead of editing paths by hand.",
+
+  "listen": {
+    "host": "127.0.0.1",
+    "port": 8099
+  },
+
+  "model": {
+    "id": "local-vl",
+    "displayName": "Local VLM (Qwen3-VL, auto start/stop)",
+    "contextWindow": 16384,
+    "maxTokens": 2048,
+    "input": ["text", "image"]
+  },
+
+  "llamaServer": {
+    "exe": "D:\\llama_cpp\\llama-server.exe",
+    "modelPath": "D:\\models\\qwen3-vl-4b\\Qwen3-VL-4B-Instruct-Q4_K_M.gguf",
+    "mmprojPath": "D:\\models\\qwen3-vl-4b\\mmproj-F16.gguf",
+    "host": "127.0.0.1",
+    "port": 18080,
+    "startTimeoutMs": 180000,
+    "stopTimeoutMs": 8000,
+    "args": [
+      "-c", "16384",
+      "-np", "2",
+      "-b", "1024",
+      "-ub", "256",
+      "-fa", "on",
+      "--cache-type-k", "q8_0",
+      "--cache-type-v", "q8_0",
+      "--image-min-tokens", "512",
+      "--fit", "on",
+      "--fit-target", "1024"
+    ]
+  },
+
+  "lifecycle": {
+    "idleTimeoutMs": 300000,
+    "reapIntervalMs": 10000,
+    "unloadOnGatewayExit": true,
+    "maxConsecutiveStartFailures": 2,
+    "failureCooldownMs": 60000
+  },
+
+  "features": {
+    "autoAttachImages": true,
+    "maxAutoAttachImages": 4,
+    "maxImageBytes": 12582912,
+    "systemPrompt": {
+      "$comment": "keep | strip | replace. DSH 的编码 agent 系统提示会显著降低小模型读图准确率：带提示时四档对照全部误报『无报错』，剥离后全部读对。",
+      "mode": "strip"
+    },
+    "saveDirective": {
+      "$comment": "提示词里写 [[save:D:\\path\\x.md]] 时，网关把完整回答写盘、只回一张收据，正文完全不进入调用方上下文。roots 是允许写入的绝对目录白名单。",
+      "enabled": true,
+      "roots": [
+        "D:\\DSH-LocalLLM",
+        "D:\\models",
+        "D:\\空测试工作区"
+      ]
+    },
+    "inlineFiles": {
+      "$comment": "提示词里写 [[file:D:\\path\\in.txt]] 时，网关把文件内容内联进提示词，调用方只需发一个路径，不必把内容重打一遍。roots 是允许读取的目录白名单。",
+      "enabled": true,
+      "maxBytes": 262144,
+      "roots": [
+        "D:\\DSH-LocalLLM",
+        "D:\\models",
+        "D:\\空测试工作区"
+      ]
+    },
+    "imageSearchDirs": [
+      "D:\\DSH-LocalLLM"
+    ]
+  },
+
+  "logging": {
+    "file": "D:\\DSH-LocalLLM\\dsh-local-llm\\logs\\gateway.log",
+    "maxBytes": 5242880,
+    "upstreamLog": "D:\\DSH-LocalLLM\\dsh-local-llm\\logs\\llama-server.log"
+  }
+}
