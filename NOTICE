@@ -1,0 +1,15 @@
+大肥鱼build整合
+Copyright (c) 2026 大肥鱼build整合 contributors
+
+本产品包含由第三方开发的软件（见 docs/THIRD-PARTY-NOTICES.md）。
+
+其中 Apache License 2.0 许可的组件：
+
+  dsh-context 0.72.0
+  Copyright (c) bowenliang123 and contributors
+  Licensed under the Apache License, Version 2.0
+  https://github.com/bowenliang123/dsh-context
+
+  说明：本项目对该组件**未作任何修改**，仅在安装时原样复制到用户的 DSH profile。
+
+Apache License 2.0 全文见 https://www.apache.org/licenses/LICENSE-2.0

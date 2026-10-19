@@ -1,0 +1,10 @@
+payload/
+*.exe
+*.zip
+*.7z
+manifest.json
+user-settings/
+*.log
+*.bak
+*.bak-*
+node_modules/
