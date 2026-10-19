@@ -1,8 +1,11 @@
+const os = require('node:os');
 // Validate the DSH profile patch we added against the schemas read from the shipped packages.
 const path = require('node:path');
 const fs = require('node:fs');
 
-const PROFILE = 'C:/Users/Administrator/.dsh/profiles/desktop';
+// Derived from the environment: a hardcoded C:/Users/<name>/ path leaked the
+// maintainer's username and pointed at the wrong profile on every other machine.
+const PROFILE = path.join(os.homedir(), '.dsh', 'profiles', 'desktop');
 const yaml = require(path.join(PROFILE, 'node_modules', 'js-yaml'));
 
 // Field sets copied from @deepseek-ai/dsh-llm-pi-ai (lib/index.js, `profile` / `modelFields`).
