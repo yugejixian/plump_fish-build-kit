@@ -240,7 +240,7 @@ if ($null -ne $old) {
 $docOrdered = [ordered]@{
   format     = 1
   packedAt   = (Get-Date -Format o)
-  packedOn   = $env:COMPUTERNAME
+  packedOn = 'local'
   fileCount  = $final.Count
   totalBytes = $totalBytes
 }
